@@ -1,11 +1,16 @@
 #pragma once
 #include <memory>
+#include <vector>
 using namespace std;
 template<typename T>
-class normal_tree_node
-{
+class normal_tree_node;
+
+template<typename T>
+using p2n = shared_ptr<normal_tree_node<T>>; // means pointer to tree node;
+
+template<typename T>
+class normal_tree_node {
 private:
-    using p2n = shared_ptr<normal_tree_node<T>>; // means pointer to tree node;
     int key;
     shared_ptr<T> value;
     p2n parent, left, right;
@@ -23,11 +28,20 @@ public:
 
 template<typename T>
 class baseTree {
-    protected:
-    using p2n = shared_ptr<normal_tree_node<T>>; 
+private:
+    
+    void recur_walk(shared_ptr<normal_tree_node> x) {
+        if (x != nullptr) {
+            recur_walk(x->left);
+            // do someting
+            recur_walk(x->right);
+        }
+    }
+protected:
     p2n root;
-    public:
+public:
     baseTree(p2n ro = nullptr) : root(ro) {}
+    vector<T> walk();
     virtual p2n insert(int key, T value);
     virtual void remove(int key);
     virtual p2n find(int key);
